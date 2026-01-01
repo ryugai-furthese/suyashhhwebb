@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un mensaje para ti</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Dancing+Script:wght@700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevent scroll during intro */
+            background: #0f172a;
+        }
+
+        .cursive { font-family: 'Dancing Script', cursive; }
+
+        /* Smooth Page Transition */
+        #mainContent {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* The "Amazing" Button Animation */
+        .magic-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.2);
+        }
+
+        .magic-button:hover {
+            box-shadow: 0 0 40px rgba(234, 179, 8, 0.5);
+            transform: scale(1.05);
+        }
+
+        .magic-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s;
+        }
+
+        .magic-button:hover::before {
+            left: 100%;
+        }
+
+        /* Firework Styles */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-layer { position: relative; z-index: 10; }
+
+        .neon-mode { background: #020617 !important; }
+        .gold-glow { text-shadow: 0 0 25px rgba(234, 179, 8, 0.5); }
+        .neon-glow { text-shadow: 0 0 25px rgba(168, 85, 247, 0.8); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float { animation: float 5s ease-in-out infinite; }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+
+    <canvas id="canvas"></canvas>
+
+    <section id="introPage" class="content-layer h-screen flex flex-col items-center justify-center p-6 text-center">
+        <div class="animate-float mb-8">
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+                This is what I do in my <br>
+                <span class="text-yellow-400 font-black italic">'Free time' ;))</span>
+            </h2>
+            <p class="text-slate-400 text-sm md:text-base">Curious? Go ahead...</p>
+        </div>
+
+        <button onclick="revealGreeting()" class="magic-button bg-yellow-500 hover:bg-yellow-400 text-black px-12 py-5 rounded-full font-bold text-xl flex items-center gap-3">
+            <i data-lucide="play" class="fill-current"></i>
+            Click Me
+        </button>
+    </section>
+
+    <div id="mainContent">
+        <nav class="content-layer p-6 flex justify-between items-center">
+            <div class="flex items-center gap-2 glass px-4 py-2 rounded-full border border-yellow-500/30">
+                <i data-lucide="diamond" class="text-red-500 fill-red-500 w-4 h-4"></i>
+                <span class="text-sm font-semibold tracking-wide">For Kanak</span>
+            </div>
+            <div class="flex items-center gap-3 glass p-2 rounded-full px-4">
+                <i data-lucide="sun" class="w-4 h-4 text-yellow-400"></i>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="moodToggle" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                </label>
+                <i data-lucide="moon" class="w-4 h-4 text-purple-400"></i>
+            </div>
+        </nav>
+
+        <main class="content-layer container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+            
+            <div class="text-center mb-8 animate-float">
+                <h1 id="yearHeading" class="text-7xl md:text-9xl font-extrabold gold-glow">2026</h1>
+                <p id="subtext" class="text-yellow-200/60 tracking-[0.4em] uppercase text-xs md:text-sm mt-4">Adventure Awaits</p>
+            </div>
+
+            <div class="glass max-w-2xl w-full p-8 md:p-12 rounded-[2.5rem] text-center mb-10 border-t border-white/20">
+                <div class="mb-6 inline-block p-4 bg-white/5 rounded-full">
+                    <i data-lucide="sparkles" class="w-8 h-8 text-yellow-400" id="cardIcon"></i>
+                </div>
+                
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 cursive text-yellow-100">Happy New Year, Kanak!</h2>
+                
+                <div class="space-y-4 text-slate-200 leading-relaxed text-base md:text-lg">
+                    <p>Just like how you made the last day of my 2025 so great, here's a small effort to making the first day of your 2026 special...</p>
+                    <p class="font-medium text-white">
+                        I wish this year brings you so much more of adventures, good times, academic achievements, fun and memorable moments, trips (hopefully xD), so that when you look back on the 31st Dec. of THIS year, you say <span class="text-yellow-400">"It was worth it" :)))</span>
+                    </p>
+                    <p class="text-sm md:text-base opacity-90 italic pt-4">
+                        Oh and I'll make sure I play a vital role making all of that possible ;P✌🏼 Let's make each day of the year count>>>
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 mt-10">
+                    <button onclick="launchFireworks()" class="bg-gradient-to-r from-yellow-400 to-amber-600 hover:scale-105 active:scale-95 transition-all text-black font-bold py-4 px-10 rounded-full flex items-center gap-2 shadow-xl shadow-yellow-500/20" id="fireworkBtn">
+                        <i data-lucide="rocket" class="w-5 h-5"></i>
+                        Celebrate Now
+                    </button>
+                    
+                    <button onclick="generateResolution()" class="glass hover:bg-white/10 transition-all py-4 px-8 rounded-full flex items-center gap-2 border border-white/20">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-yellow-400"></i>
+                        Next Trip? (Click for a random idea)
+                    </button>
+                </div>
+                
+                <p id="resolutionDisplay" class="mt-6 font-semibold text-yellow-400 min-h-[1.5rem]"></p>
+            </div>
+
+            <div class="text-center mb-12">
+                <p class="text-xs uppercase tracking-widest text-slate-500 mb-6 italic">Time left to make this year of '26 count:</p>
+                <div class="flex gap-4 md:gap-8 justify-center" id="countdown">
+                    <div class="text-center"><span class="block text-2xl md:text-4xl font-bold" id="days">00</span><span class="text-[10px] text-slate-500 uppercase">Days</span></div>
+                    <div class="text-center"><span class="block text-2xl md:text-4xl font-bold" id="hours">00</span><span class="text-[10px] text-slate-500 uppercase">Hrs</span></div>
+                    <div class="text-center"><span class="block text-2xl md:text-4xl font-bold" id="mins">00</span><span class="text-[10px] text-slate-500 uppercase">Min</span></div>
+                    <div class="text-center"><span class="block text-2xl md:text-4xl font-bold" id="secs">00</span><span class="text-[10px] text-slate-500 uppercase">Sec</span></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Reveal Logic
+        function revealGreeting() {
+            document.getElementById('introPage').style.display = 'none';
+            const main = document.getElementById('mainContent');
+            main.style.display = 'block';
+            document.body.style.overflow = 'auto';
+            setTimeout(() => { main.style.opacity = '1'; }, 50);
+            launchFireworks();
+        }
+
+        // Theme Toggle
+        const moodToggle = document.getElementById('moodToggle');
+        moodToggle.addEventListener('change', () => {
+            if (moodToggle.checked) {
+                document.body.classList.add('neon-mode');
+                document.getElementById('yearHeading').className = 'text-7xl md:text-9xl font-extrabold neon-glow text-purple-400 transition-all duration-700';
+            } else {
+                document.body.classList.remove('neon-mode');
+                document.getElementById('yearHeading').className = 'text-7xl md:text-9xl font-extrabold gold-glow text-white transition-all duration-700';
+            }
+        });
+
+        // Trip Generator
+        const trips = ["Mountains are calling! 🏔️", "Sunset trip? 🌅", "Tour the best museums in the country 🚗", "Weekend getaway soon! ✨", "Exploring the city together 🏙️"];
+        function generateResolution() {
+            const display = document.getElementById('resolutionDisplay');
+            display.innerText = trips[Math.floor(Math.random() * trips.length)];
+        }
+
+        // Countdown
+        function updateTimer() {
+            const now = new Date();
+            const endOfYear = new Date("January 1, 2027 00:00:00");
+            const diff = endOfYear - now;
+            document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            document.getElementById('mins').innerText = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+            document.getElementById('secs').innerText = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Fireworks Engine
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.velocity = { x: (Math.random() - 0.5) * 10, y: (Math.random() - 0.5) * 10 };
+                this.alpha = 1; this.friction = 0.96;
+            }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill();
+            }
+            update() {
+                this.velocity.x *= this.friction; this.velocity.y *= this.friction;
+                this.x += this.velocity.x; this.y += this.velocity.y;
+                this.alpha -= 0.012;
+            }
+        }
+
+        function launchFireworks() {
+            const colors = moodToggle.checked ? ['#a855f7', '#d946ef', '#ffffff'] : ['#fbbf24', '#f59e0b', '#ffffff'];
+            for (let j = 0; j < 6; j++) {
+                setTimeout(() => {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height * 0.4;
+                    for (let i = 0; i < 50; i++) {
+                        particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+                    }
+                }, j * 150);
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = moodToggle.checked ? 'rgba(2, 6, 23, 0.15)' : 'rgba(15, 23, 42, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                if (p.alpha > 0) { p.update(); p.draw(); }
+                else { particles.splice(i, 1); }
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
